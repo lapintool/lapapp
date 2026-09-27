@@ -1,0 +1,264 @@
+/* Lapapp 应用样式。main.ts 中先引入 lapstyle/index.css 再引入本文件，
+   因此这里的规则可以依赖并覆盖 --ls-* 设计令牌。 */
+
+:root {
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: var(--ls-bg);
+  color: var(--ls-text);
+  font-size: var(--ls-font-body);
+}
+
+/* ---------- 布局骨架 ---------- */
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.app-body {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.app-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 1.25rem 1.5rem;
+  overflow-y: auto;
+}
+
+/* ---------- 自绘标题栏 ---------- */
+
+.titlebar {
+  --titlebar-height: 36px;
+  position: relative;
+  z-index: 100;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: stretch;
+  height: var(--titlebar-height);
+  background: var(--ls-bg-elevated);
+  border-bottom: 1px solid var(--ls-border);
+  user-select: none;
+}
+
+/* 整条标题栏是拖拽区，交互元素单独放开 */
+.titlebar[data-tauri-drag-region],
+.titlebar .titlebar-brand {
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+
+.titlebar .titlebar-chrome,
+.titlebar .titlebar-chrome button,
+.titlebar .chrome-dd {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.titlebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 0.875rem;
+  font-size: var(--ls-font-secondary);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* pointer-events:none 让拖拽/双击事件落到带 data-tauri-drag-region 的容器上 */
+.titlebar-brand .brand-icon {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+.titlebar-chrome {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding-right: 2px;
+}
+
+/* 右上角两个圆形图标按钮：默认无背景、无边框，悬停时轻微提亮 */
+.titlebar .chrome-dd > .ls-btn {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  justify-content: center;
+  gap: 0;
+  border-radius: 50%;
+  color: var(--ls-text-dim);
+}
+
+.titlebar .chrome-dd > .ls-btn:hover {
+  background: var(--ls-btn-hover);
+  color: var(--ls-text);
+}
+
+.titlebar .chrome-dd .arrow {
+  display: none;
+}
+
+.chrome-icon {
+  display: flex;
+}
+
+/* Windows 风格窗口按钮 */
+.window-controls {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+}
+
+.window-controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ls-text);
+  cursor: default;
+  transition:
+    background-color 0.2s var(--ls-ease-out, ease),
+    color 0.2s var(--ls-ease-out, ease);
+}
+
+.window-controls button:hover {
+  background: var(--ls-btn-hover);
+}
+
+.window-controls button.close:hover {
+  background: #e81123;
+  color: #fff;
+}
+
+.window-controls button svg {
+  display: block;
+}
+
+/* ---------- 侧边栏 ---------- */
+
+.side-nav {
+  flex: 0 0 auto;
+  width: 200px;
+  padding: 0.75rem 0.5rem;
+  border-right: 1px solid var(--ls-border);
+  overflow-y: auto;
+}
+
+/* ---------- 页面通用 ---------- */
+
+.page {
+  max-width: 880px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.page-title {
+  margin: 0.25rem 0 0;
+  font-size: var(--ls-font-title);
+  font-weight: 700;
+}
+
+.page-sub {
+  margin: 0;
+  color: var(--ls-text-dim);
+}
+
+.widget-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 0.75rem;
+}
+
+.card-title {
+  margin: 0 0 0.75rem;
+  font-size: var(--ls-font-body);
+  font-weight: 600;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.row.wrap {
+  flex-wrap: wrap;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ctl-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ctl-row .ctl-label {
+  flex: 0 0 4.5rem;
+  color: var(--ls-text-dim);
+  font-size: var(--ls-font-secondary);
+}
+
+.ctl-row .ls-slider,
+.ctl-row .ls-progress,
+.ctl-row .ls-dropdown {
+  flex: 1 1 auto;
+}
+
+.settings-card {
+  max-width: 560px;
+}
+
+.muted {
+  margin: 0;
+  color: var(--ls-text-dim);
+  font-size: var(--ls-font-secondary);
+}
+
+.kv {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.375rem 0;
+}
+
+.kv > span {
+  flex: 0 0 auto;
+  min-width: 4.5rem;
+  color: var(--ls-text-dim);
+  font-size: var(--ls-font-secondary);
+}
+
+.kv code {
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  background: var(--ls-input-bg);
+  font-family: Consolas, "Cascadia Mono", monospace;
+  font-size: var(--ls-font-secondary);
+}
