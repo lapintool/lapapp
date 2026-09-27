@@ -22,39 +22,70 @@ onMounted(async () => {
   <section class="page">
     <h1 class="page-title">{{ t("settings.title") }}</h1>
 
-    <ls-card class="settings-card">
+    <ls-card class="settings-group">
       <h3 class="card-title">{{ t("settings.appearance") }}</h3>
-      <ls-field :label="t('settings.theme')">
-        <div class="row wrap">
-          <ls-btn
+      <div class="setting-row stack">
+        <div class="setting-text">
+          <span class="setting-label">{{ t("settings.theme") }}</span>
+          <span class="setting-desc">{{ t("settings.themeDesc") }}</span>
+        </div>
+        <div class="theme-swatches" role="radiogroup" :aria-label="t('settings.theme')">
+          <button
             v-for="id in THEMES"
             :key="id"
-            size="sm"
-            :variant="theme === id ? 'fill' : ''"
+            type="button"
+            role="radio"
+            class="theme-swatch"
+            :class="{ 'is-active': theme === id }"
+            :aria-checked="theme === id"
             @click="setTheme(id)"
           >
-            {{ t("theme." + id) }}
-          </ls-btn>
+            <span class="theme-swatch__preview" :data-theme="id" aria-hidden="true">
+              <span class="theme-swatch__side"></span>
+              <span class="theme-swatch__body">
+                <span class="theme-swatch__card"></span>
+                <span class="theme-swatch__accent"></span>
+              </span>
+            </span>
+            <span>{{ t("theme." + id) }}</span>
+          </button>
         </div>
-      </ls-field>
+      </div>
     </ls-card>
 
-    <ls-card class="settings-card">
+    <ls-card class="settings-group">
       <h3 class="card-title">{{ t("settings.general") }}</h3>
-      <ls-field :label="t('settings.language')">
-        <ls-dropdown
-          :model-value="locale"
-          :options="LOCALES.map((item) => ({ value: item.id, label: item.label }))"
-          @update:model-value="setLocale(String($event))"
-        />
-      </ls-field>
+      <div class="setting-row">
+        <div class="setting-text">
+          <span class="setting-label">{{ t("settings.language") }}</span>
+          <span class="setting-desc">{{ t("settings.languageDesc") }}</span>
+        </div>
+        <div class="setting-control">
+          <ls-dropdown
+            :model-value="locale"
+            :options="LOCALES.map((item) => ({ value: item.id, label: item.label }))"
+            @update:model-value="setLocale(String($event))"
+          />
+        </div>
+      </div>
     </ls-card>
 
-    <ls-card class="settings-card">
+    <ls-card class="settings-group">
       <h3 class="card-title">{{ t("settings.about") }}</h3>
-      <p class="muted">{{ t("settings.aboutDesc") }}</p>
-      <p class="kv"><span>{{ t("settings.version") }}</span><code>{{ version || "?" }}</code></p>
-      <p class="kv"><span>{{ t("settings.stack") }}</span><code>Tauri 2 · Vue 3 · lapstyle</code></p>
+      <div class="setting-row">
+        <div class="setting-text">
+          <span class="setting-label">{{ t("app.name") }}</span>
+          <span class="setting-desc">{{ t("settings.aboutDesc") }}</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <span class="setting-label">{{ t("settings.version") }}</span>
+        <code class="setting-code">{{ version || "?" }}</code>
+      </div>
+      <div class="setting-row">
+        <span class="setting-label">{{ t("settings.stack") }}</span>
+        <code class="setting-code">Tauri 2 · Vue 3 · lapstyle</code>
+      </div>
     </ls-card>
   </section>
 </template>

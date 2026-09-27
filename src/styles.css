@@ -3,6 +3,17 @@
 
 :root {
   font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  /* 标题栏 + 侧栏共用的底色；浅色主题向文字色偏一点，保持同色相 */
+  --app-chrome-bg: color-mix(in srgb, var(--ls-text) 5%, var(--ls-bg));
+  /* 标题栏 Logo、导航图标、导航文字共用的左对齐线 */
+  --app-gutter: 16px;
+  --app-main-pad: 24px;
+}
+
+/* 深色主题的 --ls-bg 已接近纯黑，向文字色偏会和卡片同色，改为再压暗 */
+:root:not([data-theme]),
+:root[data-theme="dark"] {
+  --app-chrome-bg: color-mix(in srgb, var(--ls-bg) 55%, #000);
 }
 
 html,
@@ -14,7 +25,7 @@ body,
 body {
   margin: 0;
   overflow: hidden;
-  background: var(--ls-bg);
+  background: var(--app-chrome-bg);
   color: var(--ls-text);
   font-size: var(--ls-font-body);
 }
@@ -36,8 +47,10 @@ body {
 .app-main {
   flex: 1 1 auto;
   min-width: 0;
-  padding: 1.25rem 1.5rem;
+  box-sizing: border-box;
+  padding: var(--app-gutter) var(--app-main-pad) var(--app-main-pad);
   overflow-y: auto;
+  background: var(--ls-bg);
 }
 
 /* ---------- 自绘标题栏 ---------- */
@@ -50,7 +63,7 @@ body {
   display: flex;
   align-items: stretch;
   height: var(--titlebar-height);
-  background: var(--ls-bg-elevated);
+  background: transparent;
   border-bottom: 1px solid var(--ls-border);
   user-select: none;
 }
@@ -72,8 +85,8 @@ body {
 .titlebar-brand {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 0 0.875rem;
+  gap: 8px;
+  padding: 0 var(--app-gutter);
   font-size: var(--ls-font-secondary);
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -156,12 +169,24 @@ body {
 
 /* ---------- 侧边栏 ---------- */
 
+/* 侧栏内边距 + 菜单项内边距 = --app-gutter，让导航图标和标题栏 Logo 对齐 */
 .side-nav {
+  --nav-pad-x: 8px;
   flex: 0 0 auto;
+  box-sizing: border-box;
   width: 200px;
-  padding: 0.75rem 0.5rem;
+  padding: var(--app-gutter) var(--nav-pad-x);
   border-right: 1px solid var(--ls-border);
   overflow-y: auto;
+}
+
+.side-nav .ls-menu {
+  --ls-menu-item-pad-x: calc(var(--app-gutter) - var(--nav-pad-x));
+  --ls-menu-item-pad-y: 8px;
+}
+
+.side-nav .ls-menu .item {
+  min-height: 36px;
 }
 
 /* ---------- 页面通用 ---------- */
@@ -171,13 +196,20 @@ body {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 16px;
 }
 
+/* 内容多的页面按宽屏铺开，不套限宽容器 */
+.page.wide {
+  max-width: none;
+}
+
+/* 行高与导航项（8 + 20 + 8）一致，使页面标题和第一个导航项水平居中对齐 */
 .page-title {
-  margin: 0.25rem 0 0;
+  margin: 0;
   font-size: var(--ls-font-title);
   font-weight: 700;
+  line-height: 36px;
 }
 
 .page-sub {
@@ -231,34 +263,166 @@ body {
   flex: 1 1 auto;
 }
 
-.settings-card {
-  max-width: 560px;
-}
-
 .muted {
   margin: 0;
   color: var(--ls-text-dim);
   font-size: var(--ls-font-secondary);
 }
 
-.kv {
+/* ---------- 设置页：左说明 / 右控件 ---------- */
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px 4px;
+}
+
+.settings-group .card-title {
+  margin: 0 0 4px;
+}
+
+.setting-row {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin: 0.375rem 0;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 36px;
+  padding: 12px 0;
 }
 
-.kv > span {
-  flex: 0 0 auto;
-  min-width: 4.5rem;
+.setting-row + .setting-row {
+  border-top: 1px solid var(--ls-border);
+}
+
+/* 控件太宽放不进右列时（如主题色卡），改成上说明 / 下控件 */
+.setting-row.stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.setting-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.setting-label {
+  color: var(--ls-text);
+  font-size: var(--ls-font-body);
+}
+
+.setting-desc {
   color: var(--ls-text-dim);
-  font-size: var(--ls-font-secondary);
+  font-size: var(--ls-font-caption);
+  line-height: 1.45;
 }
 
-.kv code {
-  padding: 0.125rem 0.5rem;
+.setting-control {
+  flex: 0 0 auto;
+}
+
+.setting-control .ls-dropdown {
+  width: 200px;
+}
+
+.setting-code {
+  padding: 2px 8px;
   border-radius: 4px;
-  background: var(--ls-input-bg);
+  background: color-mix(in srgb, var(--ls-text) 7%, transparent);
+  color: var(--ls-text);
   font-family: Consolas, "Cascadia Mono", monospace;
   font-size: var(--ls-font-secondary);
+}
+
+/* ---------- 主题色卡 ---------- */
+
+.theme-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 12px;
+}
+
+/* 选中环、悬停边框在按钮上取当前应用主题的值，再继承进挂了别的 data-theme 的预览里 */
+.theme-swatch {
+  --swatch-ring: var(--ls-accent);
+  --swatch-hover: var(--ls-text-dim);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ls-text-dim);
+  font: inherit;
+  font-size: var(--ls-font-secondary);
+  text-align: center;
+  cursor: pointer;
+}
+
+.theme-swatch__preview {
+  box-sizing: border-box;
+  display: flex;
+  gap: 4px;
+  height: 64px;
+  padding: 5px;
+  border: 1px solid var(--ls-border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--ls-text) 5%, var(--ls-bg));
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition:
+    outline-color var(--ls-hover-duration, 0.2s) var(--ls-ease-out, ease),
+    border-color var(--ls-hover-duration, 0.2s) var(--ls-ease-out, ease);
+}
+
+.theme-swatch__preview[data-theme="dark"] {
+  background: color-mix(in srgb, var(--ls-bg) 55%, #000);
+}
+
+.theme-swatch__side {
+  flex: 0 0 22%;
+}
+
+.theme-swatch__body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 4px;
+  background: var(--ls-bg);
+}
+
+.theme-swatch__card {
+  flex: 1 1 auto;
+  border: 1px solid var(--ls-border);
+  border-radius: 3px;
+  background: var(--ls-bg-elevated);
+}
+
+.theme-swatch__accent {
+  width: 50%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--ls-accent);
+}
+
+.theme-swatch:hover .theme-swatch__preview {
+  border-color: var(--swatch-hover);
+}
+
+.theme-swatch.is-active {
+  color: var(--ls-text);
+  font-weight: 600;
+}
+
+.theme-swatch.is-active .theme-swatch__preview,
+.theme-swatch:focus-visible .theme-swatch__preview {
+  outline-color: var(--swatch-ring);
+}
+
+.theme-swatch:focus-visible {
+  outline: none;
 }

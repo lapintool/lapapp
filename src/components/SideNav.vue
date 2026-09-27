@@ -7,7 +7,7 @@ const { t } = useI18n();
 
 <template>
   <aside class="side-nav">
-    <ls-menu v-model="model" plain>
+    <ls-menu v-model="model" plain :card="false">
       <ls-menu-item value="widgets">
         <template #icon>
           <svg

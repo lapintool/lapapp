@@ -20,7 +20,7 @@ const optionItems = [
 </script>
 
 <template>
-  <section class="page">
+  <section class="page wide">
     <h1 class="page-title">{{ t("widgets.title") }}</h1>
     <p class="page-sub">{{ t("widgets.subtitle") }}</p>
 
