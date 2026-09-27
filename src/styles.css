@@ -95,8 +95,8 @@ body {
 /* pointer-events:none 让拖拽/双击事件落到带 data-tauri-drag-region 的容器上 */
 .titlebar-brand .brand-icon {
   flex: 0 0 auto;
-  width: 16px;
-  height: 16px;
+  width: var(--ls-menu-icon-size, 1rem);
+  height: var(--ls-menu-icon-size, 1rem);
   pointer-events: none;
 }
 
@@ -105,23 +105,22 @@ body {
   display: flex;
   align-items: center;
   gap: 2px;
-  padding-right: 2px;
 }
 
-/* 右上角两个圆形图标按钮：默认无背景、无边框，悬停时轻微提亮 */
+/* 右上角两个圆形图标按钮：lapstyle LsBtn 的 round/icon 外观（flat 变体）。
+   圆形尺寸跟随 --ls-size-md-control，随 data-ls-scale 一起缩放 */
 .titlebar .chrome-dd > .ls-btn {
-  width: 30px;
-  height: 30px;
+  width: var(--ls-size-md-control);
+  height: var(--ls-size-md-control);
   padding: 0;
   justify-content: center;
   gap: 0;
   border-radius: 50%;
-  color: var(--ls-text-dim);
 }
 
-.titlebar .chrome-dd > .ls-btn:hover {
-  background: var(--ls-btn-hover);
-  color: var(--ls-text);
+/* 图标与侧栏菜单一致（--ls-menu-icon-size = 1rem），覆盖按钮默认的 md 图标档 */
+.titlebar .chrome-dd .ls-icon {
+  --ls-icon-size: var(--ls-menu-icon-size, 1rem);
 }
 
 .titlebar .chrome-dd .arrow {
@@ -140,6 +139,8 @@ body {
 }
 
 .window-controls button {
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -149,18 +150,32 @@ body {
   background: transparent;
   color: var(--ls-text);
   cursor: default;
-  transition:
-    background-color 0.2s var(--ls-ease-out, ease),
-    color 0.2s var(--ls-ease-out, ease);
+  transition: color 0.2s var(--ls-ease-out, ease);
 }
 
-.window-controls button:hover {
-  background: var(--ls-btn-hover);
+/* 与 lapstyle 按钮一致的 hover 方式：currentColor 覆盖层淡入（opacity 0 -> 0.15） */
+.window-controls button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: currentColor;
+  opacity: 0;
+  transition: opacity var(--ls-hover, 0.2s);
+}
+
+.window-controls button:hover::after {
+  opacity: 0.15;
 }
 
 .window-controls button.close:hover {
   background: #e81123;
   color: #fff;
+}
+
+.window-controls button.close:hover::after {
+  opacity: 0;
 }
 
 .window-controls button svg {

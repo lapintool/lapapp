@@ -20,6 +20,7 @@ export default {
     fill: "填充",
     ghost: "幽灵",
     disabled: "禁用",
+    download: "下载",
     inputs: "表单",
     nickname: "昵称",
     nicknamePh: "随便起个名字",

@@ -20,6 +20,7 @@ export default {
     fill: "Fill",
     ghost: "Ghost",
     disabled: "Disabled",
+    download: "Download",
     inputs: "Inputs",
     nickname: "Nickname",
     nicknamePh: "Pick any name",

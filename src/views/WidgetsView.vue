@@ -33,6 +33,40 @@ const optionItems = [
           <ls-btn variant="ghost">{{ t("widgets.ghost") }}</ls-btn>
           <ls-btn variant="push" color="green">Push</ls-btn>
           <ls-btn disabled>{{ t("widgets.disabled") }}</ls-btn>
+          <ls-btn>
+            <ls-icon>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />
+              </svg>
+            </ls-icon>
+            {{ t("widgets.download") }}
+          </ls-btn>
+          <ls-btn round icon variant="flat" color="cyan" :title="t('nav.settings')" :aria-label="t('nav.settings')">
+            <ls-icon>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"
+                />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </ls-icon>
+          </ls-btn>
         </div>
       </ls-card>
 

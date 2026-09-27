@@ -3,11 +3,29 @@ mod paths;
 
 use tauri::Manager;
 
+/// 已有实例时把主窗口带到前台（第二次启动的进程会直接退出）。
+/// Windows 常拦截后台进程的 SetForegroundWindow，用一次置顶脉冲配合 set_focus。
+fn focus_main_window(app: &tauri::AppHandle) {
+    let Some(window) = app.get_webview_window("main") else {
+        return;
+    };
+    if window.is_minimized().unwrap_or(false) {
+        let _ = window.unminimize();
+    }
+    let _ = window.show();
+    let _ = window.set_always_on_top(true);
+    let _ = window.set_focus();
+    let _ = window.set_always_on_top(false);
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let boot_theme = config::load_settings().theme;
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+            focus_main_window(app);
+        }))
         .append_invoke_initialization_script(config::theme_boot_script(&boot_theme))
         .invoke_handler(tauri::generate_handler![
             get_settings,
